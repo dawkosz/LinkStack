@@ -1,0 +1,11 @@
+dist/
+.tools/
+artifacts/
+*.log
+*.zip
+*.user
+*.suo
+proxy-backup.xml
+status.txt
+events.log
+.vs/

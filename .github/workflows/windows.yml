@@ -1,0 +1,34 @@
+name: Windows build and protocol tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Build application
+        shell: powershell
+        run: .\scripts\build.ps1
+      - name: Run local protocol tests
+        shell: cmd
+        run: test.cmd
+      - name: Fetch verified WinDivert runtime
+        shell: powershell
+        run: .\scripts\fetch-windivert.ps1
+      - name: Package portable app
+        shell: powershell
+        run: .\scripts\package.ps1
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: LinkStack-windows-x64
+          path: artifacts/*
+          if-no-files-found: error
